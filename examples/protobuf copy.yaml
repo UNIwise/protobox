@@ -1,0 +1,17 @@
+syntax: v1
+
+builder: docker.wiseflow.io/k8s/protoc # optional, else use local binaries
+
+services:
+  - repo: https://github.com/UNIwise/protobuf/blob/master/proto/example/v1/example_api.proto
+    branch: feature/newstuff # optional, master is used as default
+    commit: dfg56j6s8fg74rt8y6rt # optional, if not set then latest is used
+    out: 
+      - language: go
+        path: ./proto/go
+      - language: php
+        path: ./proto/php
+  - repo: https://github.com/UNIwise/protobuf/proto/example2/v3
+    out: 
+      - language: js
+        path: ./proto/js
