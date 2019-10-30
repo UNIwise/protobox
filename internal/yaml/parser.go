@@ -1,8 +1,8 @@
 package yaml
 
 import (
+	"errors"
 	"io/ioutil"
-	"log"
 
 	yaml "gopkg.in/yaml.v2"
 )
@@ -11,37 +11,25 @@ func ReadFile(path string) ([]byte, error) {
 	return ioutil.ReadFile(path)
 }
 
-func ReadStruct(path string) *Definition {
+func ReadStruct(path string) (*Definition, error) {
 	data, err := ReadFile(path)
-
 	if err != nil {
-		log.Fatalln("No protobuf.yaml file found.")
-		return nil
+		return nil, errors.New("no protobuf.yaml file found")
 	}
 
 	t := Definition{}
 
 	err = yaml.Unmarshal([]byte(data), &t)
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		return nil, err
 	}
 
-	if !checkVersionSupport(t.Syntax) {
-		log.Fatalln(t.Syntax, "syntax is not supported")
-	}
+	err = Validate(t)
 
-	return &t
+	return &t, err
 }
 
-func Lint(path string) {
-	ReadStruct(path)
-}
-
-func checkVersionSupport(version string) bool {
-	switch version {
-	case
-		"v1":
-		return true
-	}
-	return false
+func Lint(path string) error {
+	_, err := ReadStruct(path)
+	return err
 }
