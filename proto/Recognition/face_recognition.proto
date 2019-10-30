@@ -1,0 +1,79 @@
+syntax = "proto3";
+
+package Proto.Face.Recognition;
+
+service FaceRecognitionService {
+    rpc match(MatchParameters) returns (MatchResponse) {}
+    rpc getMatch(GetMatchParameters) returns (GetMatchResponse) {}
+    rpc getUserMatches(GetUserMatchesParameters) returns (GetUserMatchesResponse) {}
+    rpc clearUserReferenceImage(ClearUserReferenceImageParameters) returns (ClearUserReferenceImageResponse) {}
+    rpc setUserReferenceImage(SetUserReferenceImageParameters) returns (SetUserReferenceImageResponse) {}
+}
+
+// Parameters
+
+message MatchParameters {
+    int64 userId = 1;
+    int64 flowId = 2;
+    int64 licenseId = 3;    
+    string s3Reference = 4;
+}
+
+message GetMatchParameters {
+    int64 matchId = 1;
+}
+
+message GetUserMatchesParameters {
+    int64 userId = 1;    
+}
+
+message ClearUserReferenceImageParameters {
+    int64 userId = 1;
+}
+
+message SetUserReferenceImageParameters {
+    int64 userId = 1;
+    int64 matchId = 2;
+}
+
+// Types
+
+message Match {
+    int64 matchId = 1;
+    int64 userId = 2;
+    int64 flowId = 3;
+    double confidence = 4;
+    double similarity = 5;
+    string s3Reference = 6;
+    bool isReferenceImage = 7;
+    int64 createdAt = 8;
+}
+
+message MatchError {
+    string message = 1;
+    int64 code = 2;
+}
+
+// Responses
+
+message MatchResponse {
+    int64 matchId = 1;
+    double confidence = 2;
+    double similarity = 3;
+    bool isNewReferenceImage = 4;
+    MatchError error = 5;
+}
+
+message GetMatchResponse {
+    Match match = 1;
+}
+
+message GetUserMatchesResponse {
+    repeated Match matches = 1;
+}
+
+message ClearUserReferenceImageResponse {
+}
+
+message SetUserReferenceImageResponse {
+}

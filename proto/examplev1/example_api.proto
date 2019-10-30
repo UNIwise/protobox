@@ -1,0 +1,8 @@
+syntax = "proto3";
+
+package uniwise.example.v1;
+
+option go_package = "examplev1";
+
+// This is a example of an api.
+service ExampleAPI {}
