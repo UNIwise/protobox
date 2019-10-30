@@ -2,13 +2,15 @@ package proto
 
 import (
 	"errors"
+	"io"
 	"os"
 	"os/exec"
 	"path"
-	"strings"
+
+	"github.com/UNIwise/protobuf-cli/internal/docker"
 )
 
-func Generate(proto string, language string, out string, localBin bool) error {
+func Generate(proto string, language string, out string, docker bool) error {
 	os.MkdirAll(out, os.ModePerm)
 
 	protoDest := path.Join(out, path.Base(proto))
@@ -21,10 +23,10 @@ func Generate(proto string, language string, out string, localBin bool) error {
 		return err
 	}
 
-	if localBin {
-		err = localGenerate(args)
-	} else {
+	if docker {
 		err = dockerGenerate(args)
+	} else {
+		err = localGenerate(args)
 	}
 
 	return err
@@ -69,13 +71,29 @@ func localGenerate(args []string) error {
 }
 
 func dockerGenerate(args []string) error {
-	return nil
+	cmd := "protoc"
+	return docker.Run(cmd, "./", "test")
 }
 
-func copyGeneratedFile(proto string, out string) {
-	genDir := path.Dir(proto)
-	filenameExt := path.Base(proto)
-	filename := strings.TrimSuffix(filenameExt, path.Ext(filenameExt))
+func copyFile(src string, dst string) error {
+	_, err := os.Stat(src)
+	if err != nil {
+		return err
+	}
 
-	os.Rename(path.Join(genDir, filename)+".pb.go", path.Join(out, filename)+".pb.go")
+	source, err := os.Open(src)
+	if err != nil {
+		return err
+	}
+	defer source.Close()
+
+	destination, err := os.Create(dst)
+	if err != nil {
+		return err
+	}
+
+	defer destination.Close()
+	_, err = io.Copy(destination, source)
+
+	return err
 }

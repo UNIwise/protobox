@@ -20,8 +20,8 @@ const (
 )
 
 var (
-	configVar   string
-	localBinVar bool
+	configVar string
+	dockerVar bool
 )
 
 func main() {
@@ -30,7 +30,7 @@ func main() {
 
 	generateCommand := flag.NewFlagSet("generate", flag.ExitOnError)
 	generateCommand.StringVar(&configVar, "config", "protobuf.yaml", "Specifies a config file to use.")
-	generateCommand.BoolVar(&localBinVar, "local", false, "Specifies if local protoc binaries should be used")
+	generateCommand.BoolVar(&dockerVar, "docker", false, "Specifies if docker builder should be used.")
 
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
@@ -39,8 +39,8 @@ func main() {
 			lint(configVar)
 			break
 		case "generate":
-			generateCommand.Parse(os.Args)
-			generate(configVar, localBinVar)
+			generateCommand.Parse(os.Args[2:])
+			generate(configVar, dockerVar)
 			break
 		case "--help":
 		case "help":
@@ -48,7 +48,7 @@ func main() {
 			flag.PrintDefaults()
 		}
 	} else {
-		generate(configVar, localBinVar)
+		generate(configVar, dockerVar)
 	}
 }
 
@@ -57,7 +57,7 @@ func lint(config string) {
 	checkError(err)
 }
 
-func generate(config string, localBinVar bool) {
+func generate(config string, dockerVar bool) {
 	startTime := time.Now()
 
 	def, err := yaml.ReadStruct(config)
@@ -65,6 +65,10 @@ func generate(config string, localBinVar bool) {
 	checkError(err)
 
 	fmt.Println(color.BlueString("::"), len(def.Services), "protobuf service(s) found")
+
+	if dockerVar {
+		fmt.Println(color.BlueString("::"), "Using docker builder", def.Builder)
+	}
 
 	cleanTempDir()
 
@@ -77,7 +81,7 @@ func generate(config string, localBinVar bool) {
 
 		for _, l := range s.Out {
 			fmt.Println(color.CyanString("==>"), rightPad("Generating ["+l.Language+"]:", " ", 20), s.Proto)
-			err := proto.Generate(path.Join(tempDir, s.Proto), l.Language, l.Path, true)
+			err := proto.Generate(path.Join(tempDir, s.Proto), l.Language, l.Path, dockerVar)
 
 			checkError(err)
 		}

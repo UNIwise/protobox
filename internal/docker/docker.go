@@ -1,8 +1,11 @@
 package docker
 
-import "errors"
+import (
+	"errors"
+	"os/exec"
+)
 
-func Run(cmd string, image string) error {
+func Run(cmd string, mount string, image string) error {
 	if !hasDocker() {
 		return errors.New("No docker binaries found")
 	}
@@ -11,5 +14,6 @@ func Run(cmd string, image string) error {
 }
 
 func hasDocker() bool {
-	return true
+	_, err := exec.LookPath("docker")
+	return err == nil
 }

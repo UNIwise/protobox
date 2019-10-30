@@ -3,6 +3,7 @@ package yaml
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -28,7 +29,7 @@ func Validate(t Definition) error {
 			case "Syntax":
 				return errors.New("key error at " + err.StructNamespace() + ": " + fmt.Sprintf("%v", err.Value()) + " is not a validt syntax version")
 			default:
-				return errors.New("key error at " + err.StructNamespace() + ": " + fmt.Sprintf("%v", err.StructField()) + " is required")
+				return errors.New("key error at " + err.StructNamespace() + ": " + strings.ToLower(fmt.Sprintf("%v", err.StructField())) + " is required")
 			}
 		}
 	}

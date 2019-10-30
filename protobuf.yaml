@@ -3,12 +3,25 @@ syntax: v1
 builder: docker.wiseflow.io/k8s/protoc # optional, else use local binaries
 
 services:
-  - repo: git@github.com:UNIwise/protobuf.git
-    proto: proto/example/v1/example_api.proto
+  - repo: git@github.com:UNIwise/facial-recognition-service.git
+    proto: pkg/proto/face_recognition.proto
     out: 
       - language: php
-        #path: proto/cpp
+        path: proto/php
 
+
+
+
+
+
+
+
+
+
+
+
+
+        
   # - repo: git@github.com:UNIwise/protobuf.git
   #   proto: proto/example/v1/example_api.proto
   #   out: 
