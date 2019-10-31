@@ -1,0 +1,8 @@
+syntax: v1
+
+services:
+  - repo: git@github.com:UNIwise/protobox.git
+  - proto: examples/service.proto
+    out: 
+      - language: go
+        path: gen/

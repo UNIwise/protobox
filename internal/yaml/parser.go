@@ -14,7 +14,7 @@ func ReadFile(path string) ([]byte, error) {
 func ReadStruct(path string) (*Definition, error) {
 	data, err := ReadFile(path)
 	if err != nil {
-		return nil, errors.New("no protobuf.yaml file found")
+		return nil, errors.New("no protobox.yaml file found")
 	}
 
 	t := Definition{}

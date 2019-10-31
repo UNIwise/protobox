@@ -27,10 +27,10 @@ var (
 
 func main() {
 	lintCommand := flag.NewFlagSet("lint", flag.ExitOnError)
-	lintCommand.StringVar(&configVar, "config", "protobuf.yaml", "Specifies a config file to use.")
+	lintCommand.StringVar(&configVar, "config", "protobox.yaml", "Specifies a config file to use.")
 
 	generateCommand := flag.NewFlagSet("generate", flag.ExitOnError)
-	generateCommand.StringVar(&configVar, "config", "protobuf.yaml", "Specifies a config file to use.")
+	generateCommand.StringVar(&configVar, "config", "protobox.yaml", "Specifies a config file to use.")
 	generateCommand.BoolVar(&dockerVar, "docker", false, "Specifies if docker builder should be used.")
 
 	if len(os.Args) > 1 {

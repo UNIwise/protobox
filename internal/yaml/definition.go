@@ -1,6 +1,6 @@
 package yaml
 
-// Definition describe the configuration yaml file 'protobuf.yaml'
+// Definition describe the configuration yaml file 'protobox.yaml'
 type Definition struct {
 	Services []struct {
 		Repo   string `json:"repo"`
