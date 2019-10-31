@@ -1,0 +1,7 @@
+syntax: v1
+
+services:
+  - proto: ../service.proto
+    out: 
+      - language: go
+        path: gen/
