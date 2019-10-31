@@ -4,7 +4,7 @@
 
 # protobox
 
-protobox simplifies gRPC source genration and dependency management for your projects.
+protobox simplifies gRPC source generation and dependency management for your projects.
 
 Keep track of proto files needed from folders or external git repos. Don't have protoc and all the plugins needed to generate your source files? No problem! protobox will use a docker image as a build host so you don't have to worry about the protoc build chain.
 
