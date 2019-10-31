@@ -3,7 +3,7 @@ package yaml
 // Definition describe the configuration yaml file 'protobuf.yaml'
 type Definition struct {
 	Services []struct {
-		Repo   string `json:"repo"validate:"required"`
+		Repo   string `json:"repo"`
 		Proto  string `json:"proto"validate:"required"`
 		Commit string `json:"commit,omitempty,default origin/HEAD"`
 		Branch string `json:"branch,omitempty,default master"`

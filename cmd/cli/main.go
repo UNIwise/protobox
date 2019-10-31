@@ -81,13 +81,20 @@ func generate(config string, dockerVar bool) {
 	for _, s := range def.Services {
 		fmt.Println(color.CyanString("\n==>"), rightPad("Syncing:", " ", 20), s.Repo, s.Branch, s.Commit)
 
-		_, err := git.Clone(s.Repo, s.Branch, tempDir)
-
-		checkError(err)
+		if s.Repo != "" {
+			_, err := git.Clone(s.Repo, s.Branch, tempDir)
+			checkError(err)
+		}
 
 		for _, l := range s.Out {
 			fmt.Println(color.CyanString("==>"), rightPad("Generating ["+l.Language+"]:", " ", 20), s.Proto)
-			err := proto.Generate(path.Join(tempDir, s.Proto), l.Language, l.Path, dockerVar, def.Builder)
+
+			protoFile := s.Proto
+			if s.Repo != "" {
+				protoFile = path.Join(tempDir, s.Proto)
+			}
+
+			err := proto.Generate(protoFile, l.Language, l.Path, dockerVar, def.Builder)
 
 			checkError(err)
 		}
