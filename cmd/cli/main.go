@@ -16,32 +16,27 @@ import (
 )
 
 const (
-	tempDir            = "./.proto"
+	tempDir            = "/tmp/protobox"
 	defaultDockerImage = "test"
+	yamlFile           = "protobox.yaml"
 )
 
 var (
-	configVar string
 	dockerVar bool
 )
 
 func main() {
-	lintCommand := flag.NewFlagSet("lint", flag.ExitOnError)
-	lintCommand.StringVar(&configVar, "config", "protobox.yaml", "Specifies a config file to use.")
-
 	generateCommand := flag.NewFlagSet("generate", flag.ExitOnError)
-	generateCommand.StringVar(&configVar, "config", "protobox.yaml", "Specifies a config file to use.")
 	generateCommand.BoolVar(&dockerVar, "docker", false, "Specifies if docker builder should be used.")
 
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
 		case "lint":
-			lintCommand.Parse(os.Args[2:])
-			lint(configVar)
+			lint()
 			break
 		case "generate":
 			generateCommand.Parse(os.Args[2:])
-			generate(configVar, dockerVar)
+			generate(dockerVar)
 			break
 		case "--help":
 		case "help":
@@ -49,19 +44,19 @@ func main() {
 			flag.PrintDefaults()
 		}
 	} else {
-		generate(configVar, dockerVar)
+		generate(dockerVar)
 	}
 }
 
-func lint(config string) {
-	err := yaml.Lint(config)
+func lint() {
+	err := yaml.Lint(yamlFile)
 	checkError(err)
 }
 
-func generate(config string, dockerVar bool) {
+func generate(dockerVar bool) {
 	startTime := time.Now()
 
-	def, err := yaml.ReadStruct(config)
+	def, err := yaml.ReadStruct(yamlFile)
 
 	checkError(err)
 
@@ -78,16 +73,19 @@ func generate(config string, dockerVar bool) {
 
 	cleanTempDir()
 
+	fmt.Println()
+
 	for _, s := range def.Services {
-		fmt.Println(color.CyanString("\n==>"), rightPad("Syncing:", " ", 20), s.Repo, s.Branch, s.Commit)
 
 		if s.Repo != "" {
+			fmt.Println(color.CyanString("==>"), rightPad("Syncing:", " ", 20), s.Repo, s.Branch, s.Commit)
+
 			_, err := git.Clone(s.Repo, s.Branch, tempDir)
 			checkError(err)
 		}
 
 		for _, l := range s.Out {
-			fmt.Println(color.CyanString("==>"), rightPad("Generating ["+l.Language+"]:", " ", 20), s.Proto)
+			fmt.Println(color.CyanString("==>"), rightPad("Generating ["+l.Language+"]:", " ", 20), path.Base(s.Proto))
 
 			protoFile := s.Proto
 			if s.Repo != "" {
@@ -95,7 +93,6 @@ func generate(config string, dockerVar bool) {
 			}
 
 			err := proto.Generate(protoFile, l.Language, l.Path, dockerVar, def.Builder)
-
 			checkError(err)
 		}
 
@@ -105,13 +102,11 @@ func generate(config string, dockerVar bool) {
 	os.Remove(tempDir)
 
 	duration := time.Now().Sub(startTime) / time.Nanosecond
-
 	fmt.Println(color.GreenString("\n::"), "Done", duration)
 }
 
 func cleanTempDir() {
 	dir, err := ioutil.ReadDir(tempDir)
-
 	if err != nil {
 		return
 	}

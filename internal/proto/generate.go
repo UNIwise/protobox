@@ -15,7 +15,7 @@ func Generate(proto string, language string, out string, docker bool, dockerImag
 
 	protoDest := path.Join(out, path.Base(proto))
 
-	os.Rename(proto, protoDest)
+	copyFile(proto, protoDest)
 
 	args, err := generateLanguageArgs(protoDest, language, out)
 

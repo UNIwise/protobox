@@ -29,9 +29,6 @@ protobox generate
 # Use your local protoc binaries instead of the docker build host
 protobox generate --local
 
-# Specifiy a protobox configuration file
-protobox generate --config foo/bar.yaml
-
 # Check if your system have the needed dependencies for protobox to work
 protobox check
 
