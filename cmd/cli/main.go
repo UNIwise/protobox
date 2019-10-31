@@ -44,6 +44,7 @@ func main() {
 			flag.PrintDefaults()
 		}
 	} else {
+		generateCommand.Parse(os.Args[2:])
 		generate(dockerVar)
 	}
 }
@@ -52,7 +53,7 @@ func lint() {
 	err := yaml.Lint(yamlFile)
 	checkError(err)
 
-	fmt.Println("No errors, all", color.GreenString("OK"))
+	fmt.Println(color.GreenString("::"), "No errors, all ok")
 }
 
 func generate(dockerVar bool) {
