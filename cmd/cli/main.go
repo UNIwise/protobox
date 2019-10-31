@@ -51,6 +51,8 @@ func main() {
 func lint() {
 	err := yaml.Lint(yamlFile)
 	checkError(err)
+
+	fmt.Println("No errors, all", color.GreenString("OK"))
 }
 
 func generate(dockerVar bool) {
