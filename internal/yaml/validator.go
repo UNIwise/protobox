@@ -25,11 +25,11 @@ func Validate(t Definition) error {
 		for _, err := range err.(validator.ValidationErrors) {
 			switch err.Field() {
 			case "Language":
-				return errors.New("key error at " + err.StructNamespace() + ": " + fmt.Sprintf("%v", err.Value()) + " is not a validt language")
+				return errors.New("Malformed config, " + err.StructNamespace() + ": " + fmt.Sprintf("%v", err.Value()) + " is not a validt language")
 			case "Syntax":
-				return errors.New("key error at " + err.StructNamespace() + ": " + fmt.Sprintf("%v", err.Value()) + " is not a validt syntax version")
+				return errors.New("Malformed config, " + err.StructNamespace() + ": " + fmt.Sprintf("%v", err.Value()) + " is not a validt syntax version")
 			default:
-				return errors.New("key error at " + err.StructNamespace() + ": " + strings.ToLower(fmt.Sprintf("%v", err.StructField())) + " is required")
+				return errors.New("Malformed config, " + err.StructNamespace() + ": " + strings.ToLower(fmt.Sprintf("%v", err.StructField())) + " is required")
 			}
 		}
 	}
