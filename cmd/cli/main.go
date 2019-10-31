@@ -16,7 +16,8 @@ import (
 )
 
 const (
-	tempDir = "./.proto"
+	tempDir            = "./.proto"
+	defaultDockerImage = "test"
 )
 
 var (
@@ -67,7 +68,12 @@ func generate(config string, dockerVar bool) {
 	fmt.Println(color.BlueString("::"), len(def.Services), "protobuf service(s) found")
 
 	if dockerVar {
-		fmt.Println(color.BlueString("::"), "Using docker builder", def.Builder)
+		if def.Builder == "" {
+			fmt.Println(color.BlueString("::"), "Using default docker builder", defaultDockerImage)
+			def.Builder = defaultDockerImage
+		} else {
+			fmt.Println(color.BlueString("::"), "Using docker builder", def.Builder)
+		}
 	}
 
 	cleanTempDir()
@@ -81,7 +87,7 @@ func generate(config string, dockerVar bool) {
 
 		for _, l := range s.Out {
 			fmt.Println(color.CyanString("==>"), rightPad("Generating ["+l.Language+"]:", " ", 20), s.Proto)
-			err := proto.Generate(path.Join(tempDir, s.Proto), l.Language, l.Path, dockerVar)
+			err := proto.Generate(path.Join(tempDir, s.Proto), l.Language, l.Path, dockerVar, def.Builder)
 
 			checkError(err)
 		}

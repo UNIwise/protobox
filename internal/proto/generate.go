@@ -10,7 +10,7 @@ import (
 	"github.com/UNIwise/protobuf-cli/internal/docker"
 )
 
-func Generate(proto string, language string, out string, docker bool) error {
+func Generate(proto string, language string, out string, docker bool, dockerImage string) error {
 	os.MkdirAll(out, os.ModePerm)
 
 	protoDest := path.Join(out, path.Base(proto))
@@ -24,7 +24,7 @@ func Generate(proto string, language string, out string, docker bool) error {
 	}
 
 	if docker {
-		err = dockerGenerate(args)
+		err = dockerGenerate(args, dockerImage)
 	} else {
 		err = localGenerate(args)
 	}
@@ -39,7 +39,7 @@ func generateLanguageArgs(proto string, language string, out string) ([]string, 
 	case "go":
 		args[0] = "--go_out=plugins=grpc,import_path=" + out + ":."
 	case "ts":
-		args[0] = "--ts_out=service=true:."
+		args[0] = "--ts_out=:."
 	case "js":
 		args[0] = "--js_out=" + out
 	case "php":
@@ -70,9 +70,8 @@ func localGenerate(args []string) error {
 	return cmd.Run()
 }
 
-func dockerGenerate(args []string) error {
-	cmd := "protoc"
-	return docker.Run(cmd, "./", "test")
+func dockerGenerate(args []string, dockerImage string) error {
+	return docker.Run("protoc", args, "./", dockerImage)
 }
 
 func copyFile(src string, dst string) error {
