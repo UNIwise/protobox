@@ -20,22 +20,22 @@ go get github.com/UNIwise/protobox
 # Display the help page
 protobox help
 
-# Initialize a protobox.yaml
+# Initialize protobox.yaml
 protobox init
 
-# Generate your source files specified in your protobox.yaml file
+# Generate your source files specified in protobox.yaml
 protobox generate
 
-# Use your local protoc binaries instead of a docker build host
+# Use your local protoc binaries instead of the docker build host
 protobox generate --local
 
-# Specifiy a protobox config file
+# Specifiy a protobox configuration file
 protobox generate --config foo/bar.yaml
 
 # Check if your system have the needed dependencies for protobox to work
 protobox check
 
-# Linting your protobox file
+# Lint the configuration file
 protobox lint
 ```
 
