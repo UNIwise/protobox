@@ -98,22 +98,3 @@ func cleanTempDir() {
 		os.RemoveAll(path.Join([]string{tempDir, d.Name()}...))
 	}
 }
-
-func checkError(err error) {
-	if err != nil {
-		fmt.Println(color.RedString("==>"), err)
-		os.Exit(1)
-	}
-}
-
-func rightPad(input string, padChar string, length int) string {
-	result := input
-
-	add := length - len(input)
-
-	for i := 0; i < add; i++ {
-		result = result + padChar
-	}
-
-	return result
-}

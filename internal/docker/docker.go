@@ -8,7 +8,7 @@ import (
 )
 
 func Run(cmd string, args []string, mount string, image string) error {
-	if !hasDocker() {
+	if !HasDocker() {
 		return errors.New("No docker binaries found")
 	}
 
@@ -33,9 +33,4 @@ func Run(cmd string, args []string, mount string, image string) error {
 	c.Stderr = os.Stderr
 
 	return c.Run()
-}
-
-func hasDocker() bool {
-	_, err := exec.LookPath("docker")
-	return err == nil
 }
