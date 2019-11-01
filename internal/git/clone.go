@@ -7,11 +7,24 @@ import (
 )
 
 func Clone(url string, branch string, commit string, out string) (*git.Repository, error) {
-	r, err := git.PlainClone(out, false, &git.CloneOptions{
-		URL: url,
-	})
+	var conf *git.CloneOptions
 
-	if branch != "" {
+	if branch != "" || commit != "" {
+		conf = &git.CloneOptions{
+			URL: url,
+		}
+	} else {
+		// Make shallow clone
+		conf = &git.CloneOptions{
+			URL:          url,
+			Depth:        1,
+			SingleBranch: true,
+		}
+	}
+
+	r, err := git.PlainClone(out, false, conf)
+
+	if branch != "" || commit != "" {
 		err = r.Fetch(&git.FetchOptions{
 			RefSpecs: []config.RefSpec{"refs/*:refs/*", "HEAD:refs/heads/HEAD"},
 		})
