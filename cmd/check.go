@@ -54,15 +54,23 @@ var checks = []ServiceCheck{
 func check() {
 	fmt.Println(color.BlueString("::"), "Checking system dependencies...\n")
 
+	failsTotal := 0
+	failsFatal := 0
+
 	for _, c := range checks {
 		ok := c.Func()
 
 		res := color.GreenString("OK")
 		if !ok {
-			res = color.RedString("FAILED")
+			failsTotal++
+
+			res = color.RedString("MISSING")
 
 			if c.Optional {
 				res += " (optional)"
+			} else {
+				res += " (required)"
+				failsFatal++
 			}
 		}
 
@@ -70,5 +78,11 @@ func check() {
 	}
 
 	fmt.Println()
-	fmt.Println(color.GreenString("::"), "All dependencies are installed")
+	if failsFatal > 0 {
+		fmt.Println(color.RedString("::"), "A required dependency is missing, without it protobox will not work")
+	} else if failsTotal > 0 {
+		fmt.Println(color.YellowString("::"), "An optional dependency is missing, use the docker builder to insure a complete build enviroment")
+	} else {
+		fmt.Println(color.GreenString("::"), "All dependencies are installed")
+	}
 }
