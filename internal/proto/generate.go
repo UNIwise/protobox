@@ -7,7 +7,7 @@ import (
 	"os/exec"
 	"path"
 
-	"github.com/UNIwise/protobuf-cli/internal/docker"
+	"github.com/UNIwise/protobox/internal/docker"
 )
 
 func Generate(proto string, language string, out string, docker bool, dockerImage string) error {

@@ -8,9 +8,9 @@ import (
 	"path"
 	"time"
 
-	git "github.com/UNIwise/protobuf-cli/internal/git"
-	proto "github.com/UNIwise/protobuf-cli/internal/proto"
-	yaml "github.com/UNIwise/protobuf-cli/internal/yaml"
+	git "github.com/UNIwise/protobox/internal/git"
+	proto "github.com/UNIwise/protobox/internal/proto"
+	yaml "github.com/UNIwise/protobox/internal/yaml"
 
 	color "github.com/fatih/color"
 )
@@ -83,7 +83,11 @@ func generate(dockerVar bool) {
 		if s.Repo != "" {
 			fmt.Println(color.CyanString("==>"), rightPad("Syncing:", " ", 20), s.Repo, s.Branch, s.Commit)
 
-			_, err := git.Clone(s.Repo, s.Branch, tempDir)
+			if s.Branch != "" {
+				s.Branch = "refs/heads/" + s.Branch
+			}
+
+			_, err := git.Clone(s.Repo, s.Branch, s.Commit, tempDir)
 			checkError(err)
 		}
 

@@ -1,4 +1,4 @@
-module github.com/UNIwise/protobuf-cli
+module github.com/UNIwise/protobox
 
 go 1.13
 
