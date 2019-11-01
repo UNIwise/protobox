@@ -19,7 +19,8 @@ var (
 )
 
 func init() {
-	rootCmd.PersistentFlags().BoolVar(&localBin, "local", false, "Specifies if local protoc should be used")
+	genreateCmd.PersistentFlags().BoolVar(&localBin, "local", false, "Specifies if local protoc should be used")
+
 	rootCmd.AddCommand(genreateCmd)
 }
 
