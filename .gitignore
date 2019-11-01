@@ -1,2 +1,5 @@
 .vscode/
 .proto/
+
+gen/
+protobox.yaml

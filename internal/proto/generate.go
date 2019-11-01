@@ -10,7 +10,7 @@ import (
 	"github.com/UNIwise/protobox/internal/docker"
 )
 
-func Generate(proto string, language string, out string, docker bool, dockerImage string) error {
+func Generate(proto string, language string, out string, local bool, dockerImage string) error {
 	os.MkdirAll(out, os.ModePerm)
 
 	protoDest := path.Join(out, path.Base(proto))
@@ -23,10 +23,10 @@ func Generate(proto string, language string, out string, docker bool, dockerImag
 		return err
 	}
 
-	if docker {
-		err = dockerGenerate(args, dockerImage)
-	} else {
+	if local {
 		err = localGenerate(args)
+	} else {
+		err = dockerGenerate(args, dockerImage)
 	}
 
 	return err

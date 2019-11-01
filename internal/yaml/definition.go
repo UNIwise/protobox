@@ -5,8 +5,8 @@ type Definition struct {
 	Services []struct {
 		Repo   string `json:"repo"`
 		Proto  string `json:"proto"validate:"required"`
-		Commit string `json:"commit,omitempty,default origin/HEAD"`
-		Branch string `json:"branch,omitempty,default master"`
+		Commit string `json:"commit,omitempty"`
+		Branch string `json:"branch,omitempty"`
 		Out    []struct {
 			Path     string `json:"path"validate:"required"`
 			Language string `json:"language"validate:"required,language"`

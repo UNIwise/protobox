@@ -22,12 +22,12 @@ const (
 )
 
 var (
-	dockerVar bool
+	localProtocVar bool
 )
 
 func main() {
 	generateCommand := flag.NewFlagSet("generate", flag.ExitOnError)
-	generateCommand.BoolVar(&dockerVar, "docker", false, "Specifies if docker builder should be used.")
+	generateCommand.BoolVar(&localProtocVar, "local", false, "Specifies if local protoc should be used.")
 
 	if len(os.Args) > 1 {
 		switch os.Args[1] {
@@ -36,7 +36,7 @@ func main() {
 			break
 		case "generate":
 			generateCommand.Parse(os.Args[2:])
-			generate(dockerVar)
+			generate(localProtocVar)
 			break
 		case "--help":
 		case "help":
@@ -44,8 +44,7 @@ func main() {
 			flag.PrintDefaults()
 		}
 	} else {
-		generateCommand.Parse(os.Args[2:])
-		generate(dockerVar)
+		flag.PrintDefaults()
 	}
 }
 
@@ -56,7 +55,7 @@ func lint() {
 	fmt.Println(color.GreenString("::"), "No errors, all ok")
 }
 
-func generate(dockerVar bool) {
+func generate(localProtocVar bool) {
 	startTime := time.Now()
 
 	def, err := yaml.ReadStruct(yamlFile)
@@ -65,7 +64,7 @@ func generate(dockerVar bool) {
 
 	fmt.Println(color.BlueString("::"), len(def.Services), "protobuf service(s) found")
 
-	if dockerVar {
+	if !localProtocVar {
 		if def.Builder == "" {
 			fmt.Println(color.BlueString("::"), "Using default docker builder", defaultDockerImage)
 			def.Builder = defaultDockerImage
@@ -99,7 +98,7 @@ func generate(dockerVar bool) {
 				protoFile = path.Join(tempDir, s.Proto)
 			}
 
-			err := proto.Generate(protoFile, l.Language, l.Path, dockerVar, def.Builder)
+			err := proto.Generate(protoFile, l.Language, l.Path, localProtocVar, def.Builder)
 			checkError(err)
 		}
 
