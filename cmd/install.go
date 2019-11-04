@@ -63,7 +63,7 @@ func generate() {
 				s.Branch = "refs/heads/" + s.Branch
 			}
 
-			_, err := git.Clone(s.Repo, s.Branch, s.Commit, tempDir)
+			err := git.Clone(s.Repo, s.Branch, s.Commit, tempDir)
 			checkError(err)
 		}
 

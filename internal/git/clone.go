@@ -1,49 +1,48 @@
 package git
 
 import (
-	git "gopkg.in/src-d/go-git.v4"
-	"gopkg.in/src-d/go-git.v4/config"
-	"gopkg.in/src-d/go-git.v4/plumbing"
+	"os"
+	"os/exec"
 )
 
-func Clone(url string, branch string, commit string, out string) (*git.Repository, error) {
-	var conf *git.CloneOptions
-
-	if branch != "" || commit != "" {
-		conf = &git.CloneOptions{
-			URL: url,
-		}
-	} else {
-		// Make shallow clone
-		conf = &git.CloneOptions{
-			URL:          url,
-			Depth:        1,
-			SingleBranch: true,
-		}
+func Clone(url string, branch string, commit string, out string) error {
+	cloneArgs := []string{
+		"clone",
+		"--quiet",
+		url,
+		out,
 	}
 
-	r, err := git.PlainClone(out, false, conf)
+	c := exec.Command("git", cloneArgs...)
 
-	if branch != "" || commit != "" {
-		err = r.Fetch(&git.FetchOptions{
-			RefSpecs: []config.RefSpec{"refs/*:refs/*", "HEAD:refs/heads/HEAD"},
-		})
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
 
-		if err != nil {
-			return nil, err
-		}
-
-		w, err := r.Worktree()
-
-		if err != nil {
-			return nil, err
-		}
-
-		err = w.Checkout(&git.CheckoutOptions{
-			Branch: plumbing.ReferenceName(branch),
-			Force:  true,
-		})
+	err := c.Run()
+	if err != nil {
+		return err
 	}
 
-	return r, err
+	if branch == "" && commit == "" {
+		return nil
+	}
+
+	checkoutTarget := branch
+	if commit != "" {
+		checkoutTarget = commit
+	}
+
+	checkoutArgs := []string{
+		"checkout",
+		"--quiet",
+		checkoutTarget,
+	}
+
+	c = exec.Command("git", checkoutArgs...)
+	c.Dir = out
+
+	c.Stdout = os.Stdout
+	c.Stderr = os.Stderr
+
+	return c.Run()
 }

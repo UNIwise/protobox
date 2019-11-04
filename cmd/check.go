@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/cobra"
 
 	docker "github.com/UNIwise/protobox/internal/docker"
+	"github.com/UNIwise/protobox/internal/git"
 	proto "github.com/UNIwise/protobox/internal/proto"
 )
 
@@ -30,8 +31,13 @@ var checkCmd = &cobra.Command{
 
 var checks = []ServiceCheck{
 	{
-		Name:     "Docker",
+		Name:     "docker",
 		Func:     docker.HasDocker,
+		Optional: false,
+	},
+	{
+		Name:     "git",
+		Func:     git.HasGit,
 		Optional: false,
 	},
 	{
