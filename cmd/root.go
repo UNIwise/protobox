@@ -22,7 +22,7 @@ func Execute() error {
 
 func checkError(err error) {
 	if err != nil {
-		fmt.Println(color.RedString("==>"), err)
+		fmt.Println(color.RedString("::"), err)
 		os.Exit(1)
 	}
 }
