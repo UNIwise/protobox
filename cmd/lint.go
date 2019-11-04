@@ -24,5 +24,5 @@ func lint() {
 	err := yaml.Lint(yamlFile)
 	checkError(err)
 
-	fmt.Println(color.GreenString("::"), "No errors, all ok")
+	fmt.Println(color.GreenString("::"), "No errors, all ok 👍")
 }
