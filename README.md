@@ -20,9 +20,6 @@ go get github.com/UNIwise/protobox
 # Display the help page
 protobox help
 
-# Initialize protobox.yaml
-protobox init
-
 # Generate your source files specified in protobox.yaml
 protobox generate
 
