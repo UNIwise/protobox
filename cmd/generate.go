@@ -36,7 +36,7 @@ var genreateCmd = &cobra.Command{
 func generate() {
 	startTime := time.Now()
 
-	def, err := yaml.ReadStruct(defaults.YamlFile)
+	def, err := yaml.Read(defaults.YamlFile)
 
 	checkError(err)
 
