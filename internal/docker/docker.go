@@ -22,7 +22,7 @@ func Run(cmd string, args []string, mount string, image string) error {
 		"run",
 		"-i",
 		"-v",
-		absMount + ":/gen",
+		absMount + ":/mnt",
 		image,
 		cmd,
 	}, args...)

@@ -8,6 +8,6 @@ FROM node:12-alpine
 RUN apk --no-cache add protobuf && mkdir gen
 COPY --from=builder /go/bin/protoc-gen-go /usr/bin
 
-WORKDIR gen
+WORKDIR mnt
 
 RUN npm install -g ts-protoc-gen

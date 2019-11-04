@@ -10,7 +10,7 @@ import (
 
 const (
 	tempDir            = "/tmp/protobox"
-	defaultDockerImage = "wiseflow/protobox"
+	defaultDockerImage = "wiseflow/protobox:latest"
 	yamlFile           = "protobox.yaml"
 	version            = "1.0.0"
 )
