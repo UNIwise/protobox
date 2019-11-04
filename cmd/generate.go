@@ -59,10 +59,6 @@ func generate() {
 		if s.Repo != "" {
 			fmt.Println(color.CyanString("==>"), rightPad("Syncing:", " ", 20), s.Repo, s.Branch, s.Commit)
 
-			if s.Branch != "" {
-				s.Branch = "refs/heads/" + s.Branch
-			}
-
 			err := git.Clone(s.Repo, s.Branch, s.Commit, tempDir)
 			checkError(err)
 		}
