@@ -32,14 +32,18 @@ func Clone(url string, branch string, commit string, out string) error {
 		checkoutTarget = commit
 	}
 
+	return Checkout(out, checkoutTarget)
+}
+
+func Checkout(dir string, ref string) error {
 	checkoutArgs := []string{
 		"checkout",
 		"--quiet",
-		checkoutTarget,
+		ref,
 	}
 
-	c = exec.Command("git", checkoutArgs...)
-	c.Dir = out
+	c := exec.Command("git", checkoutArgs...)
+	c.Dir = dir
 
 	c.Stdout = os.Stdout
 	c.Stderr = os.Stderr
