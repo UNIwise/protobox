@@ -16,10 +16,6 @@ const (
 )
 
 var (
-	// Used for flags.
-	cfgFile     string
-	userLicense string
-
 	rootCmd = &cobra.Command{
 		Use:   "protobox",
 		Short: "gRPC source generation and dependency management like a good boy.",
