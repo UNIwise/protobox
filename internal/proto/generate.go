@@ -6,63 +6,72 @@ import (
 	"os"
 	"os/exec"
 	"path"
+	"path/filepath"
 
 	"github.com/UNIwise/protobox/internal/docker"
 )
 
-func Generate(proto string, language string, out string, local bool, dockerImage string) error {
+func Generate(proto string, language string, src string, out string, local bool, dockerImage string) error {
 	os.MkdirAll(out, os.ModePerm)
 
-	protoDest := path.Join(out, path.Base(proto))
+	copyFile(proto, path.Join(out, path.Base(proto)))
 
-	copyFile(proto, protoDest)
+	outAbs, err := filepath.Abs(out)
+	if err != nil {
+		return err
+	}
 
-	args, err := generateLanguageArgs(protoDest, language, out)
+	srcAbs, err := filepath.Abs(src)
 	if err != nil {
 		return err
 	}
 
 	if local {
-		err = localGenerate(args)
+		return localGenerate(proto, language, srcAbs, outAbs)
 	} else {
-		err = dockerGenerate(args, dockerImage)
+		return dockerGenerate(dockerImage, proto, language, srcAbs, outAbs)
 	}
-
-	return err
 }
 
 func generateLanguageArgs(proto string, language string, out string) ([]string, error) {
-	args := make([]string, 2)
+	args := make([]string, 3)
+
+	args[0] = "--proto_path=" + path.Dir(proto)
 
 	switch language {
 	case "go":
-		args[0] = "--go_out=plugins=grpc,import_path=" + out + ":."
+		args[1] = "--go_out=" + out
 	case "ts":
-		args[0] = "--ts_out=:."
+		args[1] = "--ts_out=" + out
 	case "js":
-		args[0] = "--js_out=" + out
+		args[1] = "--js_out=" + out
 	case "php":
-		args[0] = "--php_out=" + out
+		args[1] = "--php_out=" + out
 	case "python":
-		args[0] = "--python_out=."
+		args[1] = "--python_out=" + out
 	case "java":
-		args[0] = "--java_out=."
+		args[1] = "--java_out=" + out
 	case "cpp":
-		args[0] = "--cpp_out=."
+		args[1] = "--cpp_out=" + out
 	case "ruby":
-		args[0] = "--ruby_out=."
+		args[1] = "--ruby_out=" + out
 	default:
 		return nil, errors.New("Language \"" + language + "\" not supported")
 	}
 
-	args[1] = proto
+	args[2] = proto
 
 	return args, nil
 }
 
-func localGenerate(args []string) error {
+func localGenerate(proto string, language string, src string, out string) error {
 	if !HasProtoc() {
 		return errors.New("No protoc binary found")
+	}
+
+	args, err := generateLanguageArgs(path.Join(src, proto), language, out)
+	if err != nil {
+		return err
 	}
 
 	cmd := exec.Command("protoc", args...)
@@ -73,8 +82,13 @@ func localGenerate(args []string) error {
 	return cmd.Run()
 }
 
-func dockerGenerate(args []string, dockerImage string) error {
-	return docker.Run("protoc", args, "./", dockerImage)
+func dockerGenerate(dockerImage string, proto string, language string, src string, out string) error {
+	args, err := generateLanguageArgs(proto, language, "/out")
+	if err != nil {
+		return err
+	}
+
+	return docker.Run(dockerImage, "protoc", args, src+":/mnt", out+":/out")
 }
 
 func copyFile(src string, dst string) error {

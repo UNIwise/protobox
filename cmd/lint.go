@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/UNIwise/protobox/internal/defaults"
 	"github.com/UNIwise/protobox/internal/yaml"
 	"github.com/fatih/color"
 	"github.com/spf13/cobra"
@@ -21,7 +22,7 @@ var lintCmd = &cobra.Command{
 }
 
 func lint() {
-	err := yaml.Lint(yamlFile)
+	err := yaml.Lint(defaults.YamlFile)
 	checkError(err)
 
 	fmt.Println(color.GreenString("::"), "No errors, all ok 👍")

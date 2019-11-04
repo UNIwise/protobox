@@ -7,25 +7,35 @@ import (
 	"path/filepath"
 )
 
-func Run(cmd string, args []string, mount string, image string) error {
+func Run(image string, cmd string, args []string, mounts ...string) error {
 	if !HasDocker() {
 		return errors.New("No docker binary found")
 	}
 
-	absMount, err := filepath.Abs(mount)
-
-	if err != nil {
-		return err
-	}
-
-	dockerArgs := append([]string{
+	dockerArgs := []string{
 		"run",
 		"-i",
-		"-v",
-		absMount + ":/mnt",
+	}
+
+	for _, m := range mounts {
+		absMount, err := filepath.Abs(m)
+
+		if err != nil {
+			return err
+		}
+
+		dockerArgs = append(dockerArgs, []string{
+			"-v",
+			absMount,
+		}...)
+	}
+
+	dockerArgs = append(dockerArgs, []string{
 		image,
 		cmd,
-	}, args...)
+	}...)
+
+	dockerArgs = append(dockerArgs, args...)
 
 	c := exec.Command("docker", dockerArgs...)
 

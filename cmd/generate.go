@@ -7,6 +7,7 @@ import (
 	"path"
 	"time"
 
+	"github.com/UNIwise/protobox/internal/defaults"
 	"github.com/UNIwise/protobox/internal/git"
 	"github.com/UNIwise/protobox/internal/proto"
 	"github.com/UNIwise/protobox/internal/yaml"
@@ -35,7 +36,7 @@ var genreateCmd = &cobra.Command{
 func generate() {
 	startTime := time.Now()
 
-	def, err := yaml.ReadStruct(yamlFile)
+	def, err := yaml.ReadStruct(defaults.YamlFile)
 
 	checkError(err)
 
@@ -43,8 +44,8 @@ func generate() {
 
 	if !localBin {
 		if def.Builder == "" {
-			fmt.Println(color.BlueString("::"), "Using default docker builder", defaultDockerImage)
-			def.Builder = defaultDockerImage
+			fmt.Println(color.BlueString("::"), "Using default docker builder", defaults.DockerImage)
+			def.Builder = defaults.DockerImage
 		} else {
 			fmt.Println(color.BlueString("::"), "Using docker builder", def.Builder)
 		}
@@ -55,42 +56,40 @@ func generate() {
 	fmt.Println()
 
 	for _, s := range def.Services {
+		srcDir := "./"
 
 		if s.Repo != "" {
 			fmt.Println(color.CyanString("==>"), rightPad("Syncing:", " ", 20), s.Repo, s.Branch, s.Commit)
 
-			err := git.Clone(s.Repo, s.Branch, s.Commit, tempDir)
+			err := git.Clone(s.Repo, s.Branch, s.Commit, defaults.TempDir)
 			checkError(err)
+
+			srcDir = defaults.TempDir
 		}
 
 		for _, l := range s.Out {
 			fmt.Println(color.CyanString("==>"), rightPad("Generating ["+l.Language+"]:", " ", 20), path.Base(s.Proto))
 
-			protoFile := s.Proto
-			if s.Repo != "" {
-				protoFile = path.Join(tempDir, s.Proto)
-			}
-
-			err := proto.Generate(protoFile, l.Language, l.Path, localBin, def.Builder)
+			err := proto.Generate(s.Proto, l.Language, srcDir, l.Path, localBin, def.Builder)
 			checkError(err)
 		}
 
 		cleanTempDir()
 	}
 
-	os.Remove(tempDir)
+	os.Remove(defaults.TempDir)
 
 	duration := time.Now().Sub(startTime) / time.Nanosecond
 	fmt.Println(color.GreenString("\n::"), "Done", duration)
 }
 
 func cleanTempDir() {
-	dir, err := ioutil.ReadDir(tempDir)
+	dir, err := ioutil.ReadDir(defaults.TempDir)
 	if err != nil {
 		return
 	}
 
 	for _, d := range dir {
-		os.RemoveAll(path.Join([]string{tempDir, d.Name()}...))
+		os.RemoveAll(path.Join([]string{defaults.TempDir, d.Name()}...))
 	}
 }

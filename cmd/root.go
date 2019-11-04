@@ -8,13 +8,6 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const (
-	tempDir            = "/tmp/protobox"
-	defaultDockerImage = "wiseflow/protobox:latest"
-	yamlFile           = "protobox.yaml"
-	version            = "1.0.0"
-)
-
 var (
 	rootCmd = &cobra.Command{
 		Use:   "protobox",
