@@ -18,7 +18,6 @@ func Generate(proto string, language string, out string, local bool, dockerImage
 	copyFile(proto, protoDest)
 
 	args, err := generateLanguageArgs(protoDest, language, out)
-
 	if err != nil {
 		return err
 	}
@@ -62,6 +61,10 @@ func generateLanguageArgs(proto string, language string, out string) ([]string, 
 }
 
 func localGenerate(args []string) error {
+	if !HasProtoc() {
+		return errors.New("No protoc binary found")
+	}
+
 	cmd := exec.Command("protoc", args...)
 
 	cmd.Stdout = os.Stdout
