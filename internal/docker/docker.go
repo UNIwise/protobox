@@ -4,6 +4,7 @@ import (
 	"errors"
 	"os"
 	"os/exec"
+	"os/user"
 	"path/filepath"
 )
 
@@ -12,9 +13,16 @@ func Run(image string, cmd string, args []string, mounts ...string) error {
 		return errors.New("No docker binary found")
 	}
 
+	user, err := user.Current()
+	if err != nil {
+		panic(err)
+	}
+
 	dockerArgs := []string{
 		"run",
 		"-i",
+		"--user",
+		user.Uid + ":" + user.Gid,
 	}
 
 	for _, m := range mounts {
