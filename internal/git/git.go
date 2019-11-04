@@ -1,11 +1,16 @@
 package git
 
 import (
+	"errors"
 	"os"
 	"os/exec"
 )
 
 func Clone(url string, branch string, commit string, out string) error {
+	if !HasGit() {
+		return errors.New("No git binary found")
+	}
+
 	cloneArgs := []string{
 		"clone",
 		"--quiet",
@@ -36,6 +41,10 @@ func Clone(url string, branch string, commit string, out string) error {
 }
 
 func Checkout(dir string, ref string) error {
+	if !HasGit() {
+		return errors.New("No git binary found")
+	}
+
 	checkoutArgs := []string{
 		"checkout",
 		"--quiet",

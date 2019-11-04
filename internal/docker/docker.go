@@ -9,7 +9,7 @@ import (
 
 func Run(cmd string, args []string, mount string, image string) error {
 	if !HasDocker() {
-		return errors.New("No docker binaries found")
+		return errors.New("No docker binary found")
 	}
 
 	absMount, err := filepath.Abs(mount)
