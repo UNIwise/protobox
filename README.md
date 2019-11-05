@@ -65,8 +65,7 @@ syntax: v1
 
 services:
   - repo: git@github.com:UNIwise/protobox
-    branch: master # optional
-    commit: bcf8507c0bd7d33f54a8223c9e8fa1fd3e4a4555 # optional
+    Ref: master # optional, a branch or commit hash
     proto: examples/service.proto
     out: 
       - language: go

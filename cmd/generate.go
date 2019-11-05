@@ -59,9 +59,9 @@ func generate() {
 		srcDir := "./"
 
 		if s.Repo != "" {
-			fmt.Println(color.CyanString("==>"), rightPad("Syncing:", " ", 20), s.Repo, s.Branch, s.Commit)
+			fmt.Println(color.CyanString("==>"), rightPad("Syncing:", " ", 20), s.Repo, s.Ref)
 
-			err := git.Clone(s.Repo, s.Branch, s.Commit, defaults.TempDir)
+			err := git.Clone(s.Repo, s.Ref, defaults.TempDir)
 			checkError(err)
 
 			srcDir = defaults.TempDir

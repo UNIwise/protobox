@@ -10,11 +10,10 @@ type Definition struct {
 }
 
 type Service struct {
-	Repo   string `yaml:"repo,omitempty"`
-	Proto  string `yaml:"proto"validate:"required"`
-	Commit string `yaml:"commit,omitempty"`
-	Branch string `yaml:"branch,omitempty"`
-	Out    []Out  `yaml:"out"validate:"required,dive"`
+	Repo  string `yaml:"repo,omitempty"`
+	Proto string `yaml:"proto"validate:"required"`
+	Ref   string `yaml:"ref,omitempty"`
+	Out   []Out  `yaml:"out"validate:"required,dive"`
 }
 
 type Out struct {
@@ -31,7 +30,7 @@ func New() *Definition {
 }
 
 func (a *Service) Equals(b *Service) bool {
-	return a.Repo == b.Repo && a.Proto == b.Proto && a.Commit == b.Commit && a.Branch == b.Branch
+	return a.Repo == b.Repo && a.Proto == b.Proto && a.Ref == b.Ref
 }
 
 func (a *Out) Equals(b *Out) bool {

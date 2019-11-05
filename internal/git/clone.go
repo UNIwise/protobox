@@ -6,7 +6,7 @@ import (
 	"os/exec"
 )
 
-func Clone(url string, branch string, commit string, out string) error {
+func Clone(url string, ref string, out string) error {
 	if !HasGit() {
 		return errors.New("No git binary found")
 	}
@@ -28,14 +28,9 @@ func Clone(url string, branch string, commit string, out string) error {
 		return err
 	}
 
-	if branch == "" && commit == "" {
+	if ref == "" {
 		return nil
 	}
 
-	checkoutTarget := branch
-	if commit != "" {
-		checkoutTarget = commit
-	}
-
-	return Checkout(out, checkoutTarget)
+	return Checkout(out, ref)
 }

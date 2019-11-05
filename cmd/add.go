@@ -13,9 +13,10 @@ import (
 var errUnknownResource = errors.New("Unknown resource")
 
 var addCmd = &cobra.Command{
-	Use:   "add [URI] [LANGUAGE] [OUT DIR]",
-	Short: "Add proto dependency to " + defaults.YamlFile,
-	Args:  cobra.ExactArgs(3),
+	Use:     "add [URI] [LANGUAGE] [OUT DIR]",
+	Short:   "Add proto dependency to " + defaults.YamlFile,
+	Example: "protobox add https://github.com/UNIwise/protobox/blob/master/examples/service.proto go gen",
+	Args:    cobra.ExactArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
 		add(args[0], args[1], args[2])
 	},
@@ -65,10 +66,10 @@ func addGitProto(d *yaml.Definition, uri string, language string, out string) er
 	}
 
 	return addService(d, yaml.Service{
-		Repo:   repo,
-		Branch: ref,
-		Proto:  file,
-		Out:    outStruct,
+		Repo:  repo,
+		Ref:   ref,
+		Proto: file,
+		Out:   outStruct,
 	})
 }
 
