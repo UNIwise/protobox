@@ -105,8 +105,28 @@ services:
 
 And of course all examples above can be combined as you please! 
 
-## Syntax
+## Syntax of protobox.yaml
 
+### Root
 
+| Key      | Info                                                                             | Optional |
+|----------|----------------------------------------------------------------------------------|----------|
+| syntax   | Specifies the version of the syntax used. Available syntaxes are: `v1`           | no       |
+| builder  | Specifies the docker image to use as build host. Defaults is `wiseflow/protobox` | yes      |
+| services | A list of services to generate, see [Services](#Services)                        | yes      |
 
-Available languages are: `go`, `php`, `ts`, `js`, `cpp`, `python`, `java`, `ruby`.
+### Services
+
+| Key   | Info                                                              | Optional |
+|-------|-------------------------------------------------------------------|----------|
+| repo  | A git repository to retrieve a protobuf file from                 | yes      |
+| ref   | A branch or commit id to checkout from git                        | yes      |
+| proto | The path of the protobuf file to use. If no Repo is specified then proto is a local file.                              | np       |
+| out   | A list of languages to generate services for, see [Out](#Out) | no       |
+
+### Out
+
+| Key      | Info                                                                                                                                                                                                 | Optional |
+|----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
+| language | The target language of the service. Available languages are: `go`, `php`, `ts`, `js`, `cpp`, `python`, `java`, `ruby` and `none`. Use `none` to copy the proto file without generating source files | no       |
+| path     | The output path of the generated files                                                                                                                                                               | no       |
