@@ -8,16 +8,17 @@ import (
 	"path"
 	"path/filepath"
 
+	"github.com/UNIwise/protobox/internal/defaults"
 	"github.com/UNIwise/protobox/internal/docker"
 )
 
-func Generate(proto string, language string, src string, out string, local bool, dockerImage string) error {
+func Generate(proto string, language string, src string, out string, local bool, dockerImage string, isCloned bool) error {
 	os.MkdirAll(out, os.ModePerm)
 
 	protoOut := path.Join(out, path.Base(proto))
 
-	if proto != protoOut {
-		err := copyFile(proto, protoOut)
+	if isCloned || proto != protoOut {
+		err := copyFile(path.Join(defaults.TempDir, proto), protoOut)
 		if err != nil {
 			return err
 		}

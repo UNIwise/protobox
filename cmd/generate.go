@@ -70,7 +70,7 @@ func generate() {
 		for _, l := range s.Out {
 			fmt.Println(color.CyanString("==>"), rightPad("Generating ["+l.Language+"]:", " ", 20), path.Base(s.Proto))
 
-			err := proto.Generate(s.Proto, l.Language, srcDir, l.Path, localBin, def.Builder)
+			err := proto.Generate(s.Proto, l.Language, srcDir, l.Path, localBin, def.Builder, s.Repo != "")
 			checkError(err)
 		}
 
