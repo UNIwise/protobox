@@ -2,46 +2,98 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
+	"os"
 	"strings"
 
+	"github.com/UNIwise/protobox/internal/defaults"
+	"github.com/UNIwise/protobox/internal/yaml"
 	"github.com/spf13/cobra"
 )
 
-func init() {
-	rootCmd.AddCommand(addCmd)
-}
+var errUnknownResource = errors.New("Unknown resource")
 
 var addCmd = &cobra.Command{
-	Use:   "add [URL] [LANGUAGE] [OUT DIR]",
-	Short: "Add proto dependency to protobox.yaml",
+	Use:   "add [URI] [LANGUAGE] [OUT DIR]",
+	Short: "Add proto dependency to " + defaults.YamlFile,
 	Args:  cobra.ExactArgs(3),
 	Run: func(cmd *cobra.Command, args []string) {
 		add(args[0], args[1], args[2])
 	},
 }
 
-func add(url string, language string, out string) {
-	if strings.Contains(url, "/blob/") {
-		checkError(addGitProto(url, language))
-	}
-
-	checkError(errors.New("Unknown resource"))
+func init() {
+	rootCmd.AddCommand(addCmd)
 }
 
-func addGitProto(url string, language string) error {
-	res := strings.Split(url, "/blob/")
+func add(uri string, language string, out string) {
+	var d *yaml.Definition
+	var err error
+
+	if !yaml.Exists() {
+		d = yaml.New()
+	} else {
+		d, err = yaml.Load()
+		checkError(err)
+	}
+
+	if strings.Contains(uri, "http") && strings.Contains(uri, "/blob/") {
+		checkError(addGitProto(d, uri, language, out))
+	} else if fileExists(uri) {
+		addLocalProto(d, uri, language, out)
+	} else {
+		checkError(errUnknownResource)
+	}
+}
+
+func addGitProto(d *yaml.Definition, uri string, language string, out string) error {
+	res := strings.Split(uri, "/blob/")
 	idx := strings.Index(res[1], "/")
 
 	if len(res) < 2 || idx == -1 {
-		return errors.New("Unknown resource")
+		return errUnknownResource
 	}
 
 	repo := res[0]
 	ref := res[1][:idx]
 	file := res[1][idx+1:]
 
-	fmt.Println(repo, ref, file)
+	outStruct := []yaml.Out{
+		yaml.Out{
+			Language: language,
+			Path:     out,
+		},
+	}
 
-	return nil
+	return addService(d, yaml.Service{
+		Repo:   repo,
+		Branch: ref,
+		Proto:  file,
+		Out:    outStruct,
+	})
+}
+
+func addLocalProto(d *yaml.Definition, uri string, language string, out string) error {
+	outStruct := []yaml.Out{
+		yaml.Out{
+			Language: language,
+			Path:     out,
+		},
+	}
+
+	return addService(d, yaml.Service{
+		Proto: uri,
+		Out:   outStruct,
+	})
+}
+
+func addService(d *yaml.Definition, s yaml.Service) error {
+	d.Services = append(d.Services, s)
+	return yaml.Save(d)
+}
+
+func fileExists(path string) bool {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		return false
+	}
+	return true
 }

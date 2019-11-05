@@ -89,6 +89,6 @@ func check() {
 	} else if failsTotal > 0 {
 		fmt.Println(color.YellowString("::"), "An optional dependency is missing, use the docker builder to insure a complete build enviroment")
 	} else {
-		fmt.Println(color.GreenString("::"), "All dependencies are installed")
+		fmt.Println(color.GreenString("::"), "All dependencies are ready to 'go'")
 	}
 }

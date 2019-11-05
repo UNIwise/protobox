@@ -15,7 +15,7 @@ func init() {
 
 var lintCmd = &cobra.Command{
 	Use:   "lint",
-	Short: "Lint syntax checks your protobox.yaml",
+	Short: "Lint syntax checks your " + defaults.YamlFile,
 	Run: func(cmd *cobra.Command, args []string) {
 		lint()
 	},

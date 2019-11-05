@@ -20,6 +20,15 @@ go get github.com/UNIwise/protobox
 # Display the help page
 protobox help
 
+# Initialize protobox.yaml
+protobox init
+
+# Add a proto dependency, target language 'go' and out directory 'gen'
+protobox add https://github.com/UNIwise/protobox/blob/master/examples/service.proto go gen
+
+# Add a proto local dependency, target language 'go' and out directory 'gen'
+protobox add examples/service.proto go gen
+
 # Generate your source files specified in protobox.yaml
 protobox generate
 

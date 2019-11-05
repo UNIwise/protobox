@@ -5,13 +5,14 @@ import (
 	"io/ioutil"
 	"os"
 
+	"github.com/UNIwise/protobox/internal/defaults"
 	yaml "gopkg.in/yaml.v2"
 )
 
 func Read(path string) (*Definition, error) {
 	data, err := ioutil.ReadFile(path)
 	if err != nil {
-		return nil, errors.New("no protobox.yaml file found")
+		return nil, errors.New("no " + defaults.YamlFile + " file found")
 	}
 
 	t := Definition{}
@@ -38,4 +39,19 @@ func Write(path string, def Definition) error {
 func Lint(path string) error {
 	_, err := Read(path)
 	return err
+}
+
+func Exists() bool {
+	if _, err := os.Stat(defaults.YamlFile); os.IsNotExist(err) {
+		return false
+	}
+	return true
+}
+
+func Load() (*Definition, error) {
+	return Read(defaults.YamlFile)
+}
+
+func Save(def *Definition) error {
+	return Write(defaults.YamlFile, *def)
 }

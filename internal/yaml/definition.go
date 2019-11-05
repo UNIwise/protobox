@@ -1,21 +1,31 @@
 package yaml
 
-// Definition describe the configuration yaml file 'protobox.yaml'
+import "github.com/UNIwise/protobox/internal/defaults"
+
+// Definition describe the configuration yaml file
 type Definition struct {
-	Services []Service `json:"services"validate:"dive"`
-	Builder  string    `json:"builder,omitempty"`
-	Syntax   string    `json:"syntax"validate:"required,syntax"`
+	Syntax   string    `yaml:"syntax"validate:"required,syntax"`
+	Builder  string    `yaml:"builder,omitempty"`
+	Services []Service `yaml:"services"validate:"dive"`
 }
 
 type Service struct {
-	Repo   string `json:"repo"`
-	Proto  string `json:"proto"validate:"required"`
-	Commit string `json:"commit,omitempty"`
-	Branch string `json:"branch,omitempty"`
-	Out    []Out  `json:"out"validate:"required,dive"`
+	Repo   string `yaml:"repo,omitempty"`
+	Proto  string `yaml:"proto"validate:"required"`
+	Commit string `yaml:"commit,omitempty"`
+	Branch string `yaml:"branch,omitempty"`
+	Out    []Out  `yaml:"out"validate:"required,dive"`
 }
 
 type Out struct {
-	Path     string `json:"path"validate:"required"`
-	Language string `json:"language"validate:"required,language"`
+	Path     string `yaml:"path"validate:"required"`
+	Language string `yaml:"language"validate:"required,language"`
+}
+
+func New() *Definition {
+	d := Definition{}
+	d.Syntax = defaults.Syntax
+	d.Builder = defaults.DockerImage
+
+	return &d
 }
