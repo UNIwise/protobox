@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package Proto.Hello;
+
+service HelloService {
+    rpc hello(HelloParameters) returns (HelloResponse) {}
+}
+
+// Parameters
+
+message HelloParameters {
+    string name = 1;
+}
+
+// Responses
+
+message HelloResponse {
+    string greeting = 1;
+}

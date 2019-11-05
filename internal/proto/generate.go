@@ -40,7 +40,7 @@ func generateLanguageArgs(proto string, language string, out string) ([]string, 
 
 	switch language {
 	case "go":
-		args[1] = "--go_out=" + out
+		args[1] = "--go_out=plugins=grpc:" + out
 	case "ts":
 		args[1] = "--ts_out=" + out
 	case "js":
