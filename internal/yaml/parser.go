@@ -33,7 +33,7 @@ func Write(path string, def Definition) error {
 		return err
 	}
 
-	return ioutil.WriteFile(path, bytes, os.ModePerm)
+	return ioutil.WriteFile(path, bytes, 0664)
 }
 
 func Lint(path string) error {

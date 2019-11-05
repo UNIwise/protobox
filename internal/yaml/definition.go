@@ -29,3 +29,11 @@ func New() *Definition {
 
 	return &d
 }
+
+func (a *Service) Equals(b *Service) bool {
+	return a.Repo == b.Repo && a.Proto == b.Proto && a.Commit == b.Commit && a.Branch == b.Branch
+}
+
+func (a *Out) Equals(b *Out) bool {
+	return a.Path == b.Path && a.Language == b.Language
+}

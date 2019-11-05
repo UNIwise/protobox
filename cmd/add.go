@@ -86,9 +86,30 @@ func addLocalProto(d *yaml.Definition, uri string, language string, out string) 
 	})
 }
 
-func addService(d *yaml.Definition, s yaml.Service) error {
-	d.Services = append(d.Services, s)
-	return yaml.Save(d)
+func addService(def *yaml.Definition, service yaml.Service) error {
+	var merged = false
+	for idx, s := range def.Services {
+		if s.Equals(&service) {
+			exists := false
+			for _, o := range s.Out {
+				if o.Equals(&service.Out[0]) {
+					exists = true
+				}
+			}
+
+			if !exists {
+				def.Services[idx].Out = append(s.Out, service.Out[0])
+			}
+
+			merged = true
+		}
+	}
+
+	if !merged {
+		def.Services = append(def.Services, service)
+	}
+
+	return yaml.Save(def)
 }
 
 func fileExists(path string) bool {
