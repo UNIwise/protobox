@@ -37,8 +37,8 @@ func add(uri string, language string, out string) {
 		checkError(err)
 	}
 
-	if strings.Contains(uri, "http") && strings.Contains(uri, "/blob/") {
-		checkError(addGitProto(d, uri, language, out))
+	if strings.Contains(uri, "github") && strings.Contains(uri, "/blob/") {
+		checkError(addGithubProto(d, uri, language, out))
 	} else if fileExists(uri) {
 		addLocalProto(d, uri, language, out)
 	} else {
@@ -46,7 +46,7 @@ func add(uri string, language string, out string) {
 	}
 }
 
-func addGitProto(d *yaml.Definition, uri string, language string, out string) error {
+func addGithubProto(d *yaml.Definition, uri string, language string, out string) error {
 	res := strings.Split(uri, "/blob/")
 	idx := strings.Index(res[1], "/")
 
