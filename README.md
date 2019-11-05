@@ -65,7 +65,7 @@ syntax: v1
 
 services:
   - repo: git@github.com:UNIwise/protobox
-    Ref: master # optional, a branch or commit hash
+    ref: master # optional, a branch or commit hash
     proto: examples/service.proto
     out: 
       - language: go
@@ -106,5 +106,7 @@ services:
 And of course all examples above can be combined as you please! 
 
 ## Syntax
+
+
 
 Available languages are: `go`, `php`, `ts`, `js`, `cpp`, `python`, `java`, `ruby`.
