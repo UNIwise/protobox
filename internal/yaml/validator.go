@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	languages = []string{"go", "ts", "js", "php", "python", "java", "cpp", "ruby"}
+	languages = []string{"none", "go", "ts", "js", "php", "python", "java", "cpp", "ruby"}
 	syntaxes  = []string{"v1"}
 )
 
