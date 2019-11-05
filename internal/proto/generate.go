@@ -14,9 +14,13 @@ import (
 func Generate(proto string, language string, src string, out string, local bool, dockerImage string) error {
 	os.MkdirAll(out, os.ModePerm)
 
-	err := copyFile(proto, path.Join(out, path.Base(proto)))
-	if err != nil {
-		return err
+	protoOut := path.Join(out, path.Base(proto))
+
+	if proto != protoOut {
+		err := copyFile(proto, protoOut)
+		if err != nil {
+			return err
+		}
 	}
 
 	if language == "none" {
