@@ -2,6 +2,7 @@ package proto
 
 import (
 	"errors"
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -46,7 +47,7 @@ func Generate(proto string, language string, src string, out string, local bool,
 }
 
 func generateLanguageArgs(proto string, language string, out string) ([]string, error) {
-	args := make([]string, 3)
+	args := make([]string, 4)
 
 	args[0] = "--proto_path=" + path.Dir(proto)
 
@@ -54,7 +55,8 @@ func generateLanguageArgs(proto string, language string, out string) ([]string, 
 	case "go":
 		args[1] = "--go_out=plugins=grpc:" + out
 	case "ts":
-		args[1] = "--ts_out=" + out
+		args[1] = "--js_out=import_style=commonjs,binary:" + out
+		args[2] = "--ts_out=" + out
 	case "js":
 		args[1] = "--js_out=" + out
 	case "php":
@@ -71,7 +73,7 @@ func generateLanguageArgs(proto string, language string, out string) ([]string, 
 		return nil, errors.New("Language \"" + language + "\" not supported")
 	}
 
-	args[2] = proto
+	args[3] = proto
 
 	return args, nil
 }
@@ -87,6 +89,8 @@ func localGenerate(proto string, language string, src string, out string) error 
 	}
 
 	cmd := exec.Command("protoc", args...)
+
+	fmt.Println(cmd)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

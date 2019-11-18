@@ -13,8 +13,7 @@ require (
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/sys v0.0.0-20191104094858-e8c54fb511f6 // indirect
-	google.golang.org/grpc v1.24.0
+	golang.org/x/sys v0.0.0-20191105142833-ac3223d80179 // indirect
 	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.30.0
