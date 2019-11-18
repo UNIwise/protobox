@@ -2,7 +2,6 @@ package proto
 
 import (
 	"errors"
-	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -89,8 +88,6 @@ func localGenerate(proto string, language string, src string, out string) error 
 	}
 
 	cmd := exec.Command("protoc", args...)
-
-	fmt.Println(cmd)
 
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
