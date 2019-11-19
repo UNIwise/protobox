@@ -10,4 +10,4 @@ COPY --from=builder /go/bin/protoc-gen-go /usr/bin
 
 WORKDIR mnt
 
-RUN npm install -g ts-protoc-gen
+RUN npm install request -g && npm config set unsafe-perm true && npm install grpc grpc-tools ts-protoc-gen protoc-gen-grpc -g

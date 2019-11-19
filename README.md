@@ -128,5 +128,5 @@ And of course all examples above can be combined as you please!
 
 | Key      | Info                                                                                                                                                                                                 | Optional |
 |----------|------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|----------|
-| language | The target language of the service. Available languages are: `go`, `php`, `ts`, `js`, `cpp`, `python`, `java`, `ruby` and `none`. Use `none` to copy the proto file without generating source files | no       |
+| language | The target language of the service. Available languages are: `go`, `php`, `node`, `web`, `cpp`, `python`, `java`, `ruby` and `none`. Use `none` to copy the proto file without generating source files | no       |
 | path     | The output path of the generated files                                                                                                                                                               | no       |

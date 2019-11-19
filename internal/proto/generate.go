@@ -46,33 +46,35 @@ func Generate(proto string, language string, src string, out string, local bool,
 }
 
 func generateLanguageArgs(proto string, language string, out string) ([]string, error) {
-	args := make([]string, 4)
+	args := []string{}
 
-	args[0] = "--proto_path=" + path.Dir(proto)
+	args = append(args, "--proto_path="+path.Dir(proto))
 
 	switch language {
 	case "go":
-		args[1] = "--go_out=plugins=grpc:" + out
-	case "ts":
-		args[1] = "--js_out=import_style=commonjs,binary:" + out
-		args[2] = "--ts_out=" + out
-	case "js":
-		args[1] = "--js_out=" + out
+		args = append(args, "--go_out=plugins=grpc:"+out)
+	case "node":
+		args = append(args, "--js_out=import_style=commonjs,binary:"+out)
+		args = append(args, "--ts_out=service=grpc-node:"+out)
+		args = append(args, "--grpc_out="+out)
+	case "web":
+		args = append(args, "--js_out=import_style=commonjs,binary:"+out)
+		args = append(args, "--ts_out=service=grpc-web:"+out)
 	case "php":
-		args[1] = "--php_out=" + out
+		args = append(args, "--php_out="+out)
 	case "python":
-		args[1] = "--python_out=" + out
+		args = append(args, "--python_out="+out)
 	case "java":
-		args[1] = "--java_out=" + out
+		args = append(args, "--java_out="+out)
 	case "cpp":
-		args[1] = "--cpp_out=" + out
+		args = append(args, "--cpp_out="+out)
 	case "ruby":
-		args[1] = "--ruby_out=" + out
+		args = append(args, "--ruby_out="+out)
 	default:
 		return nil, errors.New("Language \"" + language + "\" not supported")
 	}
 
-	args[3] = proto
+	args = append(args, proto)
 
 	return args, nil
 }
