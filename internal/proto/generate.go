@@ -62,6 +62,7 @@ func generateLanguageArgs(proto string, language string, out string) ([]string, 
 		args = append(args, "--ts_out=service=grpc-web:"+out)
 	case "php":
 		args = append(args, "--php_out="+out)
+		args = append(args, "--grpc_out="+out)
 	case "python":
 		args = append(args, "--python_out="+out)
 	case "java":
