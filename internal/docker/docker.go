@@ -20,6 +20,7 @@ func Run(image string, cmd string, args []string, mounts ...string) error {
 
 	dockerArgs := []string{
 		"run",
+		"--pull",
 		"-i",
 		"--user",
 		user.Uid + ":" + user.Gid,
